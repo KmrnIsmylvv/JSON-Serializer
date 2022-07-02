@@ -1,7 +1,9 @@
+using DAL.Concrete;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -16,19 +18,26 @@ namespace JSON_Serializer
 {
     public class Startup
     {
-        private readonly IConfiguration _config;
+     
 
-        public Startup(IConfiguration config)
+        public Startup(IConfiguration configuration)
         {
-            config = _config;
+            Configuration = configuration;
         }
 
+        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
 
             services.AddControllers();
+
+            services.AddDbContext<Context>(opt =>
+            {
+                opt.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]);
+            });
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "JSON_Serializer", Version = "v1" });
