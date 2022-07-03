@@ -17,7 +17,7 @@ namespace DAL.Repository
             _context = context;
         }
 
-        public async Task<List<T>> GetAll()
+        public  async Task<List<T>> GetAllAsync()
         {
             return await _context.Set<T>().ToListAsync();
         }

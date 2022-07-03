@@ -11,6 +11,6 @@ namespace DAL.Abstract
         Task Insert(T t);
         void Update(T t);
         Task Delete(T t);
-        Task<List<T>> GetAll();
+        Task<List<T>> GetAllAsync();
     }
 }
