@@ -17,7 +17,7 @@ namespace DAL.Repository
             _context = context;
         }
 
-        public  async Task<List<T>> GetAllAsync()
+        public async Task<List<T>> GetAllAsync()
         {
             return await _context.Set<T>().ToListAsync();
         }
@@ -31,6 +31,7 @@ namespace DAL.Repository
         public async Task Insert(T t)
         {
             await _context.AddAsync(t);
+            await _context.SaveChangesAsync();
         }
 
         public void Update(T t)

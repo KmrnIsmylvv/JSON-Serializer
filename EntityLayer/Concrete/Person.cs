@@ -14,7 +14,7 @@ namespace EntityLayer.Concrete
 
 
         public int AddressId { get; set; }
-        public virtual Address Address { get; set; }
+        public  Address Address { get; set; }
 
     }
 }
