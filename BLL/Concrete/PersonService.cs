@@ -1,11 +1,11 @@
-﻿using BLL.Abstract;
+﻿using AutoMapper;
+using BLL.Abstract;
+using BLL.DTOs;
 using BLL.Services;
 using DAL.Abstract;
 using EntityLayer.Concrete;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace BLL.Concrete
@@ -13,17 +13,34 @@ namespace BLL.Concrete
     public class PersonService : IPersonService
     {
         private readonly IPersonRepository _personRepository;
+        private readonly IMapper _mapper;
 
-        public PersonService(IPersonRepository personRepository)
+        public PersonService(IPersonRepository personRepository, IMapper mapper)
         {
             _personRepository = personRepository;
+            _mapper = mapper;
+        }
+
+        public async Task<string> GetAll(GetAllRequest request)
+        {
+            List<Person> people = await TGetAllAsync();
+
+            var mapping = _mapper.Map<Person>(request);
+
+            var filterPeople = people.FirstOrDefault(item => item == mapping);
+
+            //GetAllRequest filterPeople = _mapper.Map<GetAllRequest>(people);
+
+            string peopleJson = JsonConverter.Serialize(filterPeople);
+
+            return peopleJson;
         }
 
         public async Task<long> Save(string json)
         {
-           Person person = JsonConverter.Deserialize<Person>(json);
+            Person person = JsonConverter.Deserialize<Person>(json);
 
-           await TAdd(person);
+            await TAdd(person);
 
             return person.Id;
         }
@@ -47,7 +64,7 @@ namespace BLL.Concrete
         {
             _personRepository.Update(t);
         }
-   
-         
+
+
     }
 }

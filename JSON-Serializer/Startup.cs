@@ -1,7 +1,7 @@
 using BLL.Abstract;
 using BLL.Concrete;
+using BLL.Utils.Profiles;
 using DAL.Abstract;
-using DAL.AutoMapperProfiles;
 using DAL.Concrete;
 using DAL.Repository;
 using Microsoft.AspNetCore.Builder;
@@ -11,7 +11,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using System.Collections.Generic;
 
 namespace JSON_Serializer
 {
