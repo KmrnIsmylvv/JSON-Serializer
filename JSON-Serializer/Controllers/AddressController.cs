@@ -1,16 +1,16 @@
 ﻿using BLL.Abstract;
 using BLL.Concrete;
+using DAL.Concrete;
 using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace JSON_Serializer.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class AddressController : ControllerBase
+    public class AddressController : BaseApiController
     {
         private readonly IAddressService _addressService;
 

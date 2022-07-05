@@ -12,12 +12,20 @@ namespace DAL.Concrete
     {
         public Context()
         {
-            
+
         }
 
         public Context(DbContextOptions<Context> options) : base(options)
         {
 
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder options)
+        {
+            if (!options.IsConfigured)
+            {
+                options.UseSqlServer("DefaultConnection");
+            }
         }
 
         public DbSet<Address> Addresses { get; set; }

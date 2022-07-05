@@ -1,6 +1,7 @@
 using BLL.Abstract;
 using BLL.Concrete;
 using DAL.Abstract;
+using DAL.AutoMapperProfiles;
 using DAL.Concrete;
 using DAL.Repository;
 using Microsoft.AspNetCore.Builder;
@@ -37,8 +38,12 @@ namespace JSON_Serializer
             services.AddScoped<IAddressService, AddressService>();
             services.AddScoped<IPersonService, PersonService>();
 
+            services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
 
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(options =>
+            {
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            });     
 
             services.AddDbContext<Context>(opt =>
             {
