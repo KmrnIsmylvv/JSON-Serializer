@@ -36,7 +36,7 @@ namespace JSON_Serializer.Controllers
         }
 
         [HttpGet("getallrequest")]
-        public async Task<ActionResult<string>> GetAllRequest(GetAllRequest request)
+        public async Task<ActionResult<string>> GetAllRequest([FromQuery]GetAllRequest request)
         {
             return await _personService.GetAll(request);
         }

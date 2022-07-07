@@ -25,13 +25,12 @@ namespace BLL.Concrete
         {
             List<Person> people = await TGetAllAsync();
 
-            var mapping = _mapper.Map<Person>(request);
+            List<Person> filteredPeople = people
+                .Where(p => p.Address.City == request.City
+                        || p.FirstName == request.FirstName
+                        || p.LastName == request.LastName).ToList();
 
-            var filterPeople = people.FirstOrDefault(item => item == mapping);
-
-            //GetAllRequest filterPeople = _mapper.Map<GetAllRequest>(people);
-
-            string peopleJson = JsonConverter.Serialize(filterPeople);
+            string peopleJson = JsonConverter.Serialize(filteredPeople);
 
             return peopleJson;
         }

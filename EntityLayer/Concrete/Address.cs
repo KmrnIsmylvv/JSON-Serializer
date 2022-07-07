@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace EntityLayer.Concrete
 {
+    [DataContract(IsReference = false)]
     public class Address
     {
         public long Id { get; set; }
