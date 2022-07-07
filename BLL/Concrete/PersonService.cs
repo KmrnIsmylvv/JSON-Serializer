@@ -37,7 +37,13 @@ namespace BLL.Concrete
 
         public async Task<long> Save(string json)
         {
-            Person person = JsonConverter.Deserialize<Person>(json);
+            Person person = new Person();
+            Address address = new Address();
+
+            person =  JsonConverter.Deserialize<Person>(json, person);
+            address = JsonConverter.Deserialize<Address>(json, address);
+
+            person.Address = address;
 
             await TAdd(person);
 
