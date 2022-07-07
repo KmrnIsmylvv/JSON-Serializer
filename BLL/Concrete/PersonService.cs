@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using BLL.Abstract;
+﻿using BLL.Abstract;
 using BLL.DTOs;
 using BLL.Services;
 using DAL.Abstract;
@@ -13,12 +12,10 @@ namespace BLL.Concrete
     public class PersonService : IPersonService
     {
         private readonly IPersonRepository _personRepository;
-        private readonly IMapper _mapper;
 
-        public PersonService(IPersonRepository personRepository, IMapper mapper)
+        public PersonService(IPersonRepository personRepository)
         {
             _personRepository = personRepository;
-            _mapper = mapper;
         }
 
         public async Task<string> GetAll(GetAllRequest request)
@@ -30,7 +27,7 @@ namespace BLL.Concrete
                         || p.FirstName == request.FirstName
                         || p.LastName == request.LastName).ToList();
 
-            string peopleJson = JsonConverter.Serialize(filteredPeople);
+            var peopleJson = JsonConverter.Serialize(filteredPeople);
 
             return peopleJson;
         }
@@ -40,7 +37,7 @@ namespace BLL.Concrete
             Person person = new Person();
             Address address = new Address();
 
-            person =  JsonConverter.Deserialize<Person>(json, person);
+            person = JsonConverter.Deserialize<Person>(json, person);
             address = JsonConverter.Deserialize<Address>(json, address);
 
             person.Address = address;

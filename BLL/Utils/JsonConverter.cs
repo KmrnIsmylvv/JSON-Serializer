@@ -1,10 +1,8 @@
 ﻿using EntityLayer.Concrete;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.Serialization.Json;
 using System.Text;
 
 namespace BLL.Services
@@ -13,14 +11,14 @@ namespace BLL.Services
     {
         public static string Serialize(object obj)
         {
-            var sb = new StringBuilder();
+            StringBuilder sb = new StringBuilder();
             sb.AppendLine();
             sb.Append("{");
-            var Type = obj.GetType();
+            Type Type = obj.GetType();
             IList<PropertyInfo> propsss = new List<PropertyInfo>(Type.GetProperties());
-            foreach (var item in propsss)
+            foreach (PropertyInfo item in propsss)
             {
-                var propValue = item.GetValue(obj, null);
+                object propValue = item.GetValue(obj, null);
                 sb.AppendLine();
                 sb.Append(@"[" + item.Name + "=" + propValue + "]");
             }
@@ -31,15 +29,15 @@ namespace BLL.Services
 
         public static T Deserialize<T>(string serializeData, T target) where T : new()
         {
-            var deserializedObjects = Extract(serializeData);
+            List<string> deserializedObjects = Extract(serializeData);
 
             foreach (var obj in deserializedObjects)
             {
-                var properties = ExtractValuesFromData(obj);
-                foreach (var item in properties)
+                List<HelperData> properties = ExtractValuesFromData(obj);
+                foreach (HelperData item in properties)
                 {
 
-                    var propInfo = target.GetType().GetProperty(item.PropertyName, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+                    PropertyInfo propInfo = target.GetType().GetProperty(item.PropertyName, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
                     propInfo?.SetValue(target,
                     Convert.ChangeType(item.Value, propInfo.PropertyType), null);
                 }
@@ -55,12 +53,12 @@ namespace BLL.Services
             if (text.Contains("\t"))
                 text = text.Replace("\t", string.Empty);
 
-            var contest = new List<string>();
-            var exit = false;
+            List<string> contest = new List<string>();
+            bool exit = false;
             while (!exit)
             {
-                var indexStart = text.IndexOf(startString, StringComparison.Ordinal);
-                var indexEnd = text.LastIndexOf(endString);
+                int indexStart = text.IndexOf(startString, StringComparison.Ordinal);
+                int indexEnd = text.LastIndexOf(endString);
                 if (indexStart != -1 && indexEnd != -1)
                 {
                     contest.Add(text.Substring(indexStart + startString.Length,
@@ -77,9 +75,9 @@ namespace BLL.Services
 
         private static List<HelperData> ExtractValuesFromData(string text)
         {
-            var listMyData = new List<HelperData>();
+            List<HelperData> listMyData = new List<HelperData>();
             text = String.Concat(text.Where(c => !Char.IsWhiteSpace(c)));
-            var index = text.IndexOf(":{");
+            int index = text.IndexOf(":{");
             if (index != -1)
             {
 
@@ -102,25 +100,25 @@ namespace BLL.Services
                 string[] arr = new string[2];
                 arr[0] = text1;
                 arr[1] = text2;
-                var firstdata = arr[0].Split(",");
+                string[] firstdata = arr[0].Split(",");
 
-                var secondsata = Extract(arr[1], "{", "}");
-                var seconddataa = secondsata[0].Split(',');
+                List<string> secondsata = Extract(arr[1], "{", "}");
+                string[] seconddataa = secondsata[0].Split(',');
 
                 foreach (var item in firstdata)
                 {
 
-                    var pName = item.Substring(0, item.IndexOf(":", StringComparison.Ordinal));
-                    var pValue = item.Substring(item.IndexOf(":", StringComparison.Ordinal) + 1);
+                    string pName = item.Substring(0, item.IndexOf(":", StringComparison.Ordinal));
+                    string pValue = item.Substring(item.IndexOf(":", StringComparison.Ordinal) + 1);
                     listMyData.Add(new HelperData { PropertyName = pName, Value = pValue });
                 }
 
-                foreach (var item in seconddataa)
+                foreach (string item in seconddataa)
                 {
                     if (item.Contains(":"))
                     {
-                        var pName = item.Substring(0, item.IndexOf(":", StringComparison.Ordinal)).ToLower();
-                        var pValue = item.Substring(item.IndexOf(":", StringComparison.Ordinal) + 1).ToLower();
+                        string pName = item.Substring(0, item.IndexOf(":", StringComparison.Ordinal)).ToLower();
+                        string pValue = item.Substring(item.IndexOf(":", StringComparison.Ordinal) + 1).ToLower();
                         listMyData.Add(new HelperData { PropertyName = pName, Value = pValue });
                     }
                 }
